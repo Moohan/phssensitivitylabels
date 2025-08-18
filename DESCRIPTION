@@ -1,0 +1,14 @@
+Package: phssensitivitylabels
+Type: Package
+Title: Sensitivity Labels for PHS Files
+Version: 0.1.0
+Authors@R: person(given = "James Hayes", email = "james.hayes2@phs.scot", role = c("aut", "cre"))
+Maintainer: James Hayes <james.hayes2@phs.scot>
+Description: Supplies sensitivity labels for PHS files using Open XLSX 2. Provides functions to apply and read sensitivity labels in Excel files, with built-in XML for Personal, OFFICIAL, and OFFICIAL_SENSITIVE_VMO labels.
+License: MIT
+Encoding: UTF-8
+LazyData: true
+Imports:
+    openxlsx2
+Suggests:
+    testthat
