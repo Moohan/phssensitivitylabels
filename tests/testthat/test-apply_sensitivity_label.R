@@ -75,9 +75,9 @@ test_that("apply_sensitivity_label validates label argument correctly", {
 })
 
 test_that("read_sensitivity_label handles files with corrupted or unknown labels", {
-  # Note: This test verifies the error handling for unknown label IDs
-  # but may require specific openxlsx2 internal behavior to trigger
-  # For now, we'll test the expected behavior through the interface
+  # This test attempts to verify error handling for unknown label IDs
+  # Note: The exact scenario is difficult to reproduce without manually 
+  # corrupting Excel files, but we test the documented behavior
   
   tmp <- tempfile(fileext = ".xlsx")
   wb <- openxlsx2::wb_add_worksheet(openxlsx2::wb_workbook())
@@ -90,9 +90,18 @@ test_that("read_sensitivity_label handles files with corrupted or unknown labels
   apply_sensitivity_label(tmp, "Personal")
   expect_equal(read_sensitivity_label(tmp), "Personal")
   
-  # The error case for unknown label ID is difficult to test without
-  # manually corrupting the Excel file's XML, but the code path exists
-  # and would be triggered if openxlsx2 returned an unknown XML string
+  # The error case for unknown label ID would be triggered if:
+  # 1. An Excel file had MIPS XML that doesn't match any known labels
+  # 2. openxlsx2::wb_get_mips() returned XML not in our mapping
+  # This is an edge case that would indicate corrupted or externally-modified files
+  
+  # Test that our label detection works for all supported types
+  supported_labels <- c("Personal", "OFFICIAL", "OFFICIAL_SENSITIVE_VMO")
+  for (label in supported_labels) {
+    apply_sensitivity_label(tmp, label)
+    detected_label <- read_sensitivity_label(tmp)
+    expect_equal(detected_label, label)
+  }
 })
 
 test_that("read_sensitivity_label handles edge cases", {
