@@ -82,8 +82,8 @@ apply_sensitivity_label <- function(file, label) {
     cli::cli_abort("{.arg file} must be a single non-empty character string.")
   }
   
-  if (!is.character(label) || length(label) != 1 || is.na(label)) {
-    cli::cli_abort("{.arg label} must be a single character string.")
+  if (!is.character(label) || length(label) != 1 || is.na(label) || label == "") {
+    cli::cli_abort("{.arg label} must be a single non-empty character string.")
   }
 
   # Validate label against supported options

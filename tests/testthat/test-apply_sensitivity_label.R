@@ -205,7 +205,7 @@ test_that("comprehensive parameter validation for apply_sensitivity_label", {
   
   # Test NA values
   expect_error(apply_sensitivity_label(NA_character_, "Personal"), "must be a single non-empty character string")
-  expect_error(apply_sensitivity_label(tmp, NA_character_), "must be a single character string")
+  expect_error(apply_sensitivity_label(tmp, NA_character_), "must be a single non-empty character string")
   
   # Test various invalid types for file
   expect_error(apply_sensitivity_label(123, "Personal"), "must be a single non-empty character string")
@@ -213,9 +213,9 @@ test_that("comprehensive parameter validation for apply_sensitivity_label", {
   expect_error(apply_sensitivity_label(list("file.xlsx"), "Personal"), "must be a single non-empty character string")
   
   # Test various invalid types for label
-  expect_error(apply_sensitivity_label(tmp, 123), "must be a single character string")
-  expect_error(apply_sensitivity_label(tmp, TRUE), "must be a single character string")
-  expect_error(apply_sensitivity_label(tmp, list("Personal")), "must be a single character string")
+  expect_error(apply_sensitivity_label(tmp, 123), "must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(tmp, TRUE), "must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(tmp, list("Personal")), "must be a single non-empty character string")
   
   # Test multiple values
   expect_error(apply_sensitivity_label(c(tmp, tmp), "Personal"), "must be a single non-empty character string")
