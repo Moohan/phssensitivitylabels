@@ -10,12 +10,35 @@
 #' Read Sensitivity Label
 #' @description Reads the sensitivity label from an Excel file using openxlsx2::wb_get_mips. Returns the label name, 'no label' if none is found, or errors if unexpected.
 #'
-#' @param file Path to the Excel file
+#' @param file Path to the Excel file (.xlsx or .xls)
 #' @return The sensitivity label name, or 'no label' if none is found.
 #' @export
 read_sensitivity_label <- function(file) {
-  wb <- openxlsx2::wb_load(file)
+  # Parameter validation
+  if (missing(file)) {
+    cli::cli_abort("{.arg file} is missing with no default.")
+  }
+  
+  if (is.null(file)) {
+    cli::cli_abort("{.arg file} must not be {.val NULL}.")
+  }
+  
+  if (!is.character(file) || length(file) != 1 || is.na(file) || file == "") {
+    cli::cli_abort("{.arg file} must be a single non-empty character string.")
+  }
 
+  # Check file existence
+  if (!file.exists(file)) {
+    cli::cli_abort("File {.path {file}} does not exist.")
+  }
+  
+  # Check file is Excel workbook
+  file_ext <- tolower(tools::file_ext(file))
+  if (!file_ext %in% c("xlsx", "xls")) {
+    cli::cli_abort("{.arg file} must be an Excel workbook with {.val .xlsx} or {.val .xls} extension, not {.val .{file_ext}}.")
+  }
+
+  wb <- openxlsx2::wb_load(file)
   mips <- openxlsx2::wb_get_mips(wb)
 
   if (is.null(mips) || length(mips) == 0 || mips == "") {
@@ -24,11 +47,10 @@ read_sensitivity_label <- function(file) {
 
   # Try to extract label name from XML
   xml_map <- .get_sensitivity_xml_map()
-
   label_name <- which(xml_map == mips) |> names()
 
   if (length(label_name) == 0) {
-    stop("Unknown sensitivity label ID found.")
+    cli::cli_abort("Unknown sensitivity label ID found in file {.path {file}}.")
   }
 
   return(label_name)
@@ -40,30 +62,60 @@ read_sensitivity_label <- function(file) {
 #'
 #' The function loads the Excel file, applies the specified sensitivity label using the appropriate XML, and saves the modified file. If successful, it silently returns the file path.
 #'
-#' @param file Path to the Excel file
+#' @param file Path to the Excel file (.xlsx or .xls)
 #' @param label Sensitivity label. One of: 'Personal', 'OFFICIAL', 'OFFICIAL_SENSITIVE_VMO'.
 #' @return Silently returns the file path if successful.
 #' @export
 apply_sensitivity_label <- function(file, label) {
-  match.arg(label, c("Personal", "OFFICIAL", "OFFICIAL_SENSITIVE_VMO"), several.ok = FALSE)
+  # Parameter validation
+  if (missing(file)) {
+    cli::cli_abort("{.arg file} is missing with no default.")
+  }
+  
+  if (missing(label)) {
+    cli::cli_abort("{.arg label} is missing with no default.")
+  }
+  
+  if (is.null(file)) {
+    cli::cli_abort("{.arg file} must not be {.val NULL}.")
+  }
+  
+  if (is.null(label)) {
+    cli::cli_abort("{.arg label} must not be {.val NULL}.")
+  }
+  
+  if (!is.character(file) || length(file) != 1 || is.na(file) || file == "") {
+    cli::cli_abort("{.arg file} must be a single non-empty character string.")
+  }
+  
+  if (!is.character(label) || length(label) != 1 || is.na(label) || label == "") {
+    cli::cli_abort("{.arg label} must be a single non-empty character string.")
+  }
 
+  # Validate label against supported options
+  valid_labels <- c("Personal", "OFFICIAL", "OFFICIAL_SENSITIVE_VMO")
+  if (!label %in% valid_labels) {
+    cli::cli_abort(
+      "{.arg label} must be one of {.or {.val {valid_labels}}}, not {.val {label}}."
+    )
+  }
+
+  # Check file existence
   if (!file.exists(file)) {
-    stop("File does not exist: ", file)
+    cli::cli_abort("File {.path {file}} does not exist.")
+  }
+  
+  # Check file is Excel workbook
+  file_ext <- tolower(tools::file_ext(file))
+  if (!file_ext %in% c("xlsx", "xls")) {
+    cli::cli_abort("{.arg file} must be an Excel workbook with {.val .xlsx} or {.val .xls} extension, not {.val .{file_ext}}.")
   }
 
+  # Load workbook and apply label
   wb <- openxlsx2::wb_load(file)
-
-  # Real XML for each label
   xml_map <- .get_sensitivity_xml_map()
-
-  if (!label %in% names(xml_map)) {
-    stop("Invalid sensitivity label.")
-  }
-
   xml <- xml_map[[label]]
-
   wb <- openxlsx2::wb_add_mips(wb, xml)
-
   openxlsx2::wb_save(wb, file)
 
   invisible(file)
