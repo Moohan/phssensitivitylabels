@@ -249,8 +249,8 @@ test_that("function parameter validation", {
   openxlsx2::wb_save(wb, tmp)
 
   # Test NULL parameter behavior
-  expect_error(apply_sensitivity_label(tmp, NULL), "label must not be NULL")
-  expect_error(apply_sensitivity_label(NULL, "Personal"), "file must not be NULL")
+  expect_error(apply_sensitivity_label(tmp, NULL), "must not be NULL")
+  expect_error(apply_sensitivity_label(NULL, "Personal"), "must not be NULL")
 
   # Test empty string
   expect_error(apply_sensitivity_label(tmp, ""), "label must be a single non-empty character string")
@@ -270,8 +270,8 @@ test_that("comprehensive parameter validation for apply_sensitivity_label", {
   openxlsx2::wb_save(wb, tmp)
 
   # Test missing arguments
-  expect_error(apply_sensitivity_label(), "file is missing")
-  expect_error(apply_sensitivity_label(tmp), "label is missing")
+  expect_error(apply_sensitivity_label(), "is missing")
+  expect_error(apply_sensitivity_label(tmp), "is missing")
 
   # Test NA values
   expect_error(apply_sensitivity_label(NA_character_, "Personal"), "file must be a single non-empty character string")
@@ -315,10 +315,10 @@ test_that("comprehensive parameter validation for read_sensitivity_label", {
   openxlsx2::wb_save(wb, tmp)
 
   # Test missing arguments
-  expect_error(read_sensitivity_label(), "file is missing")
+  expect_error(read_sensitivity_label(), "is missing")
 
   # Test NULL
-  expect_error(read_sensitivity_label(NULL), "file must not be NULL")
+  expect_error(read_sensitivity_label(NULL), "must not be NULL")
 
   # Test NA values
   expect_error(read_sensitivity_label(NA_character_), "file must be a single non-empty character string")
