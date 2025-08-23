@@ -250,8 +250,8 @@ test_that("function parameter validation", {
   expect_error(apply_sensitivity_label(tmp, ""), "must be a single non-empty character string")
 
   # Test numeric parameter
-  expect_error(apply_sensitivity_label(tmp, 1), "must be a single character string")
-  expect_error(apply_sensitivity_label(tmp, c("Personal", "OFFICIAL")), "must be a single character string")
+  expect_error(apply_sensitivity_label(tmp, 1), "must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(tmp, c("Personal", "OFFICIAL")), "must be a single non-empty character string")
   
   # Clean up
   unlink(tmp)
