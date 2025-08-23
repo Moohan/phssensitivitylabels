@@ -121,7 +121,7 @@ test_that("apply_sensitivity_label validates label argument correctly", {
 
   # Test invalid labels
   expect_error(apply_sensitivity_label(tmp, "INVALID"), "must be one of")
-  expect_error(apply_sensitivity_label(tmp, ""), "must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(tmp, ""), "label must be a single non-empty character string")
   expect_error(apply_sensitivity_label(tmp, "Secret"), "must be one of")
 
   # Clean up
@@ -249,15 +249,15 @@ test_that("function parameter validation", {
   openxlsx2::wb_save(wb, tmp)
 
   # Test NULL parameter behavior
-  expect_error(apply_sensitivity_label(tmp, NULL), "must not be NULL")
-  expect_error(apply_sensitivity_label(NULL, "Personal"), "must not be NULL")
+  expect_error(apply_sensitivity_label(tmp, NULL), "label must not be NULL")
+  expect_error(apply_sensitivity_label(NULL, "Personal"), "file must not be NULL")
 
   # Test empty string
-  expect_error(apply_sensitivity_label(tmp, ""), "must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(tmp, ""), "label must be a single non-empty character string")
 
   # Test numeric parameter
-  expect_error(apply_sensitivity_label(tmp, 1), "must be a single non-empty character string")
-  expect_error(apply_sensitivity_label(tmp, c("Personal", "OFFICIAL")), "must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(tmp, 1), "label must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(tmp, c("Personal", "OFFICIAL")), "label must be a single non-empty character string")
 
   # Clean up
   unlink(tmp)
@@ -270,25 +270,25 @@ test_that("comprehensive parameter validation for apply_sensitivity_label", {
   openxlsx2::wb_save(wb, tmp)
 
   # Test missing arguments
-  expect_error(apply_sensitivity_label(), "is missing")
-  expect_error(apply_sensitivity_label(tmp), "is missing")
+  expect_error(apply_sensitivity_label(), "file is missing")
+  expect_error(apply_sensitivity_label(tmp), "label is missing")
 
   # Test NA values
-  expect_error(apply_sensitivity_label(NA_character_, "Personal"), "must be a single non-empty character string")
-  expect_error(apply_sensitivity_label(tmp, NA_character_), "must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(NA_character_, "Personal"), "file must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(tmp, NA_character_), "label must be a single non-empty character string")
 
   # Test various invalid types for file
-  expect_error(apply_sensitivity_label(123, "Personal"), "must be a single non-empty character string")
-  expect_error(apply_sensitivity_label(TRUE, "Personal"), "must be a single non-empty character string")
-  expect_error(apply_sensitivity_label(list("file.xlsx"), "Personal"), "must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(123, "Personal"), "file must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(TRUE, "Personal"), "file must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(list("file.xlsx"), "Personal"), "file must be a single non-empty character string")
 
   # Test various invalid types for label
-  expect_error(apply_sensitivity_label(tmp, 123), "must be a single non-empty character string")
-  expect_error(apply_sensitivity_label(tmp, TRUE), "must be a single non-empty character string")
-  expect_error(apply_sensitivity_label(tmp, list("Personal")), "must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(tmp, 123), "label must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(tmp, TRUE), "label must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(tmp, list("Personal")), "label must be a single non-empty character string")
 
   # Test multiple values
-  expect_error(apply_sensitivity_label(c(tmp, tmp), "Personal"), "must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(c(tmp, tmp), "Personal"), "file must be a single non-empty character string")
 
   # Test invalid file extensions
   txt_file <- tempfile(fileext = ".txt")
@@ -315,24 +315,24 @@ test_that("comprehensive parameter validation for read_sensitivity_label", {
   openxlsx2::wb_save(wb, tmp)
 
   # Test missing arguments
-  expect_error(read_sensitivity_label(), "is missing")
+  expect_error(read_sensitivity_label(), "file is missing")
 
   # Test NULL
-  expect_error(read_sensitivity_label(NULL), "must not be NULL")
+  expect_error(read_sensitivity_label(NULL), "file must not be NULL")
 
   # Test NA values
-  expect_error(read_sensitivity_label(NA_character_), "must be a single non-empty character string")
+  expect_error(read_sensitivity_label(NA_character_), "file must be a single non-empty character string")
 
   # Test various invalid types
-  expect_error(read_sensitivity_label(123), "must be a single non-empty character string")
-  expect_error(read_sensitivity_label(TRUE), "must be a single non-empty character string")
-  expect_error(read_sensitivity_label(list("file.xlsx")), "must be a single non-empty character string")
+  expect_error(read_sensitivity_label(123), "file must be a single non-empty character string")
+  expect_error(read_sensitivity_label(TRUE), "file must be a single non-empty character string")
+  expect_error(read_sensitivity_label(list("file.xlsx")), "file must be a single non-empty character string")
 
   # Test empty string
-  expect_error(read_sensitivity_label(""), "must be a single non-empty character string")
+  expect_error(read_sensitivity_label(""), "file must be a single non-empty character string")
 
   # Test multiple values
-  expect_error(read_sensitivity_label(c(tmp, tmp)), "must be a single non-empty character string")
+  expect_error(read_sensitivity_label(c(tmp, tmp)), "file must be a single non-empty character string")
 
   # Test non-existent file
   non_existent_file <- tempfile(fileext = ".xlsx")
