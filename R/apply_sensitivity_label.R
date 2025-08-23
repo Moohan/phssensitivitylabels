@@ -10,7 +10,7 @@
 #' Read Sensitivity Label
 #' @description Reads the sensitivity label from an Excel file using openxlsx2::wb_get_mips. Returns the label name, 'no label' if none is found, or errors if unexpected.
 #'
-#' @param file Path to the Excel file
+#' @param file Path to the Excel file (.xlsx or .xls)
 #' @return The sensitivity label name, or 'no label' if none is found.
 #' @export
 read_sensitivity_label <- function(file) {
@@ -30,6 +30,12 @@ read_sensitivity_label <- function(file) {
   # Check file existence
   if (!file.exists(file)) {
     cli::cli_abort("File {.path {file}} does not exist.")
+  }
+  
+  # Check file is Excel workbook
+  file_ext <- tolower(tools::file_ext(file))
+  if (!file_ext %in% c("xlsx", "xls")) {
+    cli::cli_abort("{.arg file} must be an Excel workbook with {.val .xlsx} or {.val .xls} extension, not {.val .{file_ext}}.")
   }
 
   wb <- openxlsx2::wb_load(file)
@@ -56,7 +62,7 @@ read_sensitivity_label <- function(file) {
 #'
 #' The function loads the Excel file, applies the specified sensitivity label using the appropriate XML, and saves the modified file. If successful, it silently returns the file path.
 #'
-#' @param file Path to the Excel file
+#' @param file Path to the Excel file (.xlsx or .xls)
 #' @param label Sensitivity label. One of: 'Personal', 'OFFICIAL', 'OFFICIAL_SENSITIVE_VMO'.
 #' @return Silently returns the file path if successful.
 #' @export
@@ -97,6 +103,12 @@ apply_sensitivity_label <- function(file, label) {
   # Check file existence
   if (!file.exists(file)) {
     cli::cli_abort("File {.path {file}} does not exist.")
+  }
+  
+  # Check file is Excel workbook
+  file_ext <- tolower(tools::file_ext(file))
+  if (!file_ext %in% c("xlsx", "xls")) {
+    cli::cli_abort("{.arg file} must be an Excel workbook with {.val .xlsx} or {.val .xls} extension, not {.val .{file_ext}}.")
   }
 
   # Load workbook and apply label

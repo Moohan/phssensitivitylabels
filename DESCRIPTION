@@ -14,7 +14,8 @@ URL: https://github.com/Moohan/phssensitivitylabels
 BugReports: https://github.com/Moohan/phssensitivitylabels/issues
 Imports:
     openxlsx2,
-    cli
+    cli,
+    tools
 Suggests:
     testthat
 Encoding: UTF-8

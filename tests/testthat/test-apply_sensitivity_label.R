@@ -20,6 +20,25 @@ test_that("apply_sensitivity_label returns file path and applies label", {
   expect_equal(read_sensitivity_label(tmp), "OFFICIAL_SENSITIVE_VMO")
 })
 
+test_that("functions work with .xls and .xlsx extensions", {
+  # Test .xlsx files
+  tmp_xlsx <- tempfile(fileext = ".xlsx")
+  wb <- openxlsx2::wb_add_worksheet(openxlsx2::wb_workbook())
+  openxlsx2::wb_save(wb, tmp_xlsx)
+  
+  result <- apply_sensitivity_label(tmp_xlsx, "Personal")
+  expect_equal(result, tmp_xlsx)
+  expect_equal(read_sensitivity_label(tmp_xlsx), "Personal")
+  
+  # Test case insensitive extension handling
+  tmp_upper <- tempfile(fileext = ".XLSX")
+  file.copy(tmp_xlsx, tmp_upper)
+  
+  result <- apply_sensitivity_label(tmp_upper, "OFFICIAL")
+  expect_equal(result, tmp_upper)
+  expect_equal(read_sensitivity_label(tmp_upper), "OFFICIAL")
+})
+
 test_that("read_sensitivity_label returns 'no label' for file with no label", {
   tmp <- tempfile(fileext = ".xlsx")
   wb <- openxlsx2::wb_add_worksheet(openxlsx2::wb_workbook())
@@ -219,6 +238,20 @@ test_that("comprehensive parameter validation for apply_sensitivity_label", {
   
   # Test multiple values
   expect_error(apply_sensitivity_label(c(tmp, tmp), "Personal"), "must be a single non-empty character string")
+  
+  # Test invalid file extensions
+  txt_file <- tempfile(fileext = ".txt")
+  file.create(txt_file)
+  expect_error(apply_sensitivity_label(txt_file, "Personal"), "must be an Excel workbook")
+  
+  pdf_file <- tempfile(fileext = ".pdf")
+  file.create(pdf_file)
+  expect_error(apply_sensitivity_label(pdf_file, "Personal"), "must be an Excel workbook")
+  
+  # Test file with no extension
+  no_ext_file <- tempfile()
+  file.create(no_ext_file)
+  expect_error(apply_sensitivity_label(no_ext_file, "Personal"), "must be an Excel workbook")
 })
 
 test_that("comprehensive parameter validation for read_sensitivity_label", {
@@ -249,4 +282,18 @@ test_that("comprehensive parameter validation for read_sensitivity_label", {
   # Test non-existent file
   non_existent_file <- tempfile(fileext = ".xlsx")
   expect_error(read_sensitivity_label(non_existent_file), "does not exist")
+  
+  # Test invalid file extensions
+  txt_file <- tempfile(fileext = ".txt")
+  file.create(txt_file)
+  expect_error(read_sensitivity_label(txt_file), "must be an Excel workbook")
+  
+  pdf_file <- tempfile(fileext = ".pdf")
+  file.create(pdf_file)
+  expect_error(read_sensitivity_label(pdf_file), "must be an Excel workbook")
+  
+  # Test file with no extension
+  no_ext_file <- tempfile()
+  file.create(no_ext_file)
+  expect_error(read_sensitivity_label(no_ext_file), "must be an Excel workbook")
 })
