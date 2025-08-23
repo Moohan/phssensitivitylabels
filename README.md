@@ -66,6 +66,17 @@ Or use the standard R package testing approach:
 testthat::test_package("phssensitivitylabels")
 ```
 
+## Development
+
+### Pre-commit Hooks
+
+This repository includes pre-commit hooks that run the same checks as CI:
+- Style with `styler::style_package()`
+- Document with `devtools::document()`
+- Test with `devtools::test()`
+
+See [PRECOMMIT.md](PRECOMMIT.md) for setup instructions.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
