@@ -37,7 +37,13 @@ test_that("functions work with .xls and .xlsx extensions", {
 
   # Test case insensitive extension handling
   tmp_upper <- tempfile(fileext = ".XLSX")
-  file.copy(tmp_xlsx, tmp_upper)
+  wb_upper <- openxlsx2::wb_workbook()
+  wb_upper <- openxlsx2::wb_add_worksheet(wb_upper, "Sheet1")
+  openxlsx2::wb_save(wb_upper, tmp_upper)
+  
+  # Verify the file exists and has the right extension
+  expect_true(file.exists(tmp_upper))
+  expect_equal(toupper(tools::file_ext(tmp_upper)), "XLSX")
 
   result <- apply_sensitivity_label(tmp_upper, "OFFICIAL")
   expect_equal(result, tmp_upper)
@@ -65,7 +71,7 @@ test_that("apply_sensitivity_label errors for invalid label", {
   openxlsx2::wb_save(wb, tmp)
   expect_error(
     apply_sensitivity_label(tmp, "INVALID"),
-    "one of"
+    "must be one of"
   )
 
   # Clean up
@@ -109,14 +115,14 @@ test_that("apply_sensitivity_label validates label argument correctly", {
   expect_equal(read_sensitivity_label(tmp), "Personal")
 
   # Test case sensitivity - should error for wrong case
-  expect_error(apply_sensitivity_label(tmp, "personal"), "one of")
-  expect_error(apply_sensitivity_label(tmp, "official"), "one of")
-  expect_error(apply_sensitivity_label(tmp, "PERSONAL"), "one of")
+  expect_error(apply_sensitivity_label(tmp, "personal"), "must be one of")
+  expect_error(apply_sensitivity_label(tmp, "official"), "must be one of")
+  expect_error(apply_sensitivity_label(tmp, "PERSONAL"), "must be one of")
 
   # Test invalid labels
-  expect_error(apply_sensitivity_label(tmp, "INVALID"), "one of")
+  expect_error(apply_sensitivity_label(tmp, "INVALID"), "must be one of")
   expect_error(apply_sensitivity_label(tmp, ""), "must be a single non-empty character string")
-  expect_error(apply_sensitivity_label(tmp, "Secret"), "one of")
+  expect_error(apply_sensitivity_label(tmp, "Secret"), "must be one of")
 
   # Clean up
   unlink(tmp)
@@ -243,8 +249,8 @@ test_that("function parameter validation", {
   openxlsx2::wb_save(wb, tmp)
 
   # Test NULL parameter behavior
-  expect_error(apply_sensitivity_label(tmp, NULL), "NULL")
-  expect_error(apply_sensitivity_label(NULL, "Personal"), "NULL")
+  expect_error(apply_sensitivity_label(tmp, NULL), "must not be NULL")
+  expect_error(apply_sensitivity_label(NULL, "Personal"), "must not be NULL")
 
   # Test empty string
   expect_error(apply_sensitivity_label(tmp, ""), "must be a single non-empty character string")
@@ -264,8 +270,8 @@ test_that("comprehensive parameter validation for apply_sensitivity_label", {
   openxlsx2::wb_save(wb, tmp)
 
   # Test missing arguments
-  expect_error(apply_sensitivity_label(), "missing")
-  expect_error(apply_sensitivity_label(tmp), "missing")
+  expect_error(apply_sensitivity_label(), "is missing")
+  expect_error(apply_sensitivity_label(tmp), "is missing")
 
   # Test NA values
   expect_error(apply_sensitivity_label(NA_character_, "Personal"), "must be a single non-empty character string")
@@ -309,10 +315,10 @@ test_that("comprehensive parameter validation for read_sensitivity_label", {
   openxlsx2::wb_save(wb, tmp)
 
   # Test missing arguments
-  expect_error(read_sensitivity_label(), "missing")
+  expect_error(read_sensitivity_label(), "is missing")
 
   # Test NULL
-  expect_error(read_sensitivity_label(NULL), "NULL")
+  expect_error(read_sensitivity_label(NULL), "must not be NULL")
 
   # Test NA values
   expect_error(read_sensitivity_label(NA_character_), "must be a single non-empty character string")
