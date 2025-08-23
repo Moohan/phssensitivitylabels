@@ -14,8 +14,25 @@
 #' @return The sensitivity label name, or 'no label' if none is found.
 #' @export
 read_sensitivity_label <- function(file) {
-  wb <- openxlsx2::wb_load(file)
+  # Parameter validation
+  if (missing(file)) {
+    cli::cli_abort("{.arg file} is missing with no default.")
+  }
+  
+  if (is.null(file)) {
+    cli::cli_abort("{.arg file} must not be {.val NULL}.")
+  }
+  
+  if (!is.character(file) || length(file) != 1 || is.na(file) || file == "") {
+    cli::cli_abort("{.arg file} must be a single non-empty character string.")
+  }
 
+  # Check file existence
+  if (!file.exists(file)) {
+    cli::cli_abort("File {.path {file}} does not exist.")
+  }
+
+  wb <- openxlsx2::wb_load(file)
   mips <- openxlsx2::wb_get_mips(wb)
 
   if (is.null(mips) || length(mips) == 0 || mips == "") {
@@ -24,11 +41,10 @@ read_sensitivity_label <- function(file) {
 
   # Try to extract label name from XML
   xml_map <- .get_sensitivity_xml_map()
-
   label_name <- which(xml_map == mips) |> names()
 
   if (length(label_name) == 0) {
-    stop("Unknown sensitivity label ID found.")
+    cli::cli_abort("Unknown sensitivity label ID found in file {.path {file}}.")
   }
 
   return(label_name)
@@ -45,25 +61,49 @@ read_sensitivity_label <- function(file) {
 #' @return Silently returns the file path if successful.
 #' @export
 apply_sensitivity_label <- function(file, label) {
-  match.arg(label, c("Personal", "OFFICIAL", "OFFICIAL_SENSITIVE_VMO"), several.ok = FALSE)
+  # Parameter validation
+  if (missing(file)) {
+    cli::cli_abort("{.arg file} is missing with no default.")
+  }
+  
+  if (missing(label)) {
+    cli::cli_abort("{.arg label} is missing with no default.")
+  }
+  
+  if (is.null(file)) {
+    cli::cli_abort("{.arg file} must not be {.val NULL}.")
+  }
+  
+  if (is.null(label)) {
+    cli::cli_abort("{.arg label} must not be {.val NULL}.")
+  }
+  
+  if (!is.character(file) || length(file) != 1 || is.na(file) || file == "") {
+    cli::cli_abort("{.arg file} must be a single non-empty character string.")
+  }
+  
+  if (!is.character(label) || length(label) != 1 || is.na(label)) {
+    cli::cli_abort("{.arg label} must be a single character string.")
+  }
 
+  # Validate label against supported options
+  valid_labels <- c("Personal", "OFFICIAL", "OFFICIAL_SENSITIVE_VMO")
+  if (!label %in% valid_labels) {
+    cli::cli_abort(
+      "{.arg label} must be one of {.or {.val {valid_labels}}}, not {.val {label}}."
+    )
+  }
+
+  # Check file existence
   if (!file.exists(file)) {
-    stop("File does not exist: ", file)
+    cli::cli_abort("File {.path {file}} does not exist.")
   }
 
+  # Load workbook and apply label
   wb <- openxlsx2::wb_load(file)
-
-  # Real XML for each label
   xml_map <- .get_sensitivity_xml_map()
-
-  if (!label %in% names(xml_map)) {
-    stop("Invalid sensitivity label.")
-  }
-
   xml <- xml_map[[label]]
-
   wb <- openxlsx2::wb_add_mips(wb, xml)
-
   openxlsx2::wb_save(wb, file)
 
   invisible(file)

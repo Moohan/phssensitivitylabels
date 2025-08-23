@@ -13,7 +13,8 @@ License: MIT + file LICENSE
 URL: https://github.com/Moohan/phssensitivitylabels
 BugReports: https://github.com/Moohan/phssensitivitylabels/issues
 Imports:
-    openxlsx2
+    openxlsx2,
+    cli
 Suggests:
     testthat
 Encoding: UTF-8
