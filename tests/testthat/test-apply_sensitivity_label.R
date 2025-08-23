@@ -25,15 +25,15 @@ test_that("functions work with .xls and .xlsx extensions", {
   tmp_xlsx <- tempfile(fileext = ".xlsx")
   wb <- openxlsx2::wb_add_worksheet(openxlsx2::wb_workbook())
   openxlsx2::wb_save(wb, tmp_xlsx)
-  
+
   result <- apply_sensitivity_label(tmp_xlsx, "Personal")
   expect_equal(result, tmp_xlsx)
   expect_equal(read_sensitivity_label(tmp_xlsx), "Personal")
-  
+
   # Test case insensitive extension handling
   tmp_upper <- tempfile(fileext = ".XLSX")
   file.copy(tmp_xlsx, tmp_upper)
-  
+
   result <- apply_sensitivity_label(tmp_upper, "OFFICIAL")
   expect_equal(result, tmp_upper)
   expect_equal(read_sensitivity_label(tmp_upper), "OFFICIAL")
@@ -221,33 +221,33 @@ test_that("comprehensive parameter validation for apply_sensitivity_label", {
   # Test missing arguments
   expect_error(apply_sensitivity_label(), "is missing with no default")
   expect_error(apply_sensitivity_label(tmp), "is missing with no default")
-  
+
   # Test NA values
   expect_error(apply_sensitivity_label(NA_character_, "Personal"), "must be a single non-empty character string")
   expect_error(apply_sensitivity_label(tmp, NA_character_), "must be a single non-empty character string")
-  
+
   # Test various invalid types for file
   expect_error(apply_sensitivity_label(123, "Personal"), "must be a single non-empty character string")
   expect_error(apply_sensitivity_label(TRUE, "Personal"), "must be a single non-empty character string")
   expect_error(apply_sensitivity_label(list("file.xlsx"), "Personal"), "must be a single non-empty character string")
-  
+
   # Test various invalid types for label
   expect_error(apply_sensitivity_label(tmp, 123), "must be a single non-empty character string")
   expect_error(apply_sensitivity_label(tmp, TRUE), "must be a single non-empty character string")
   expect_error(apply_sensitivity_label(tmp, list("Personal")), "must be a single non-empty character string")
-  
+
   # Test multiple values
   expect_error(apply_sensitivity_label(c(tmp, tmp), "Personal"), "must be a single non-empty character string")
-  
+
   # Test invalid file extensions
   txt_file <- tempfile(fileext = ".txt")
   file.create(txt_file)
   expect_error(apply_sensitivity_label(txt_file, "Personal"), "must be an Excel workbook")
-  
+
   pdf_file <- tempfile(fileext = ".pdf")
   file.create(pdf_file)
   expect_error(apply_sensitivity_label(pdf_file, "Personal"), "must be an Excel workbook")
-  
+
   # Test file with no extension
   no_ext_file <- tempfile()
   file.create(no_ext_file)
@@ -261,37 +261,37 @@ test_that("comprehensive parameter validation for read_sensitivity_label", {
 
   # Test missing arguments
   expect_error(read_sensitivity_label(), "is missing with no default")
-  
+
   # Test NULL
   expect_error(read_sensitivity_label(NULL), "must not be")
-  
+
   # Test NA values
   expect_error(read_sensitivity_label(NA_character_), "must be a single non-empty character string")
-  
+
   # Test various invalid types
   expect_error(read_sensitivity_label(123), "must be a single non-empty character string")
   expect_error(read_sensitivity_label(TRUE), "must be a single non-empty character string")
   expect_error(read_sensitivity_label(list("file.xlsx")), "must be a single non-empty character string")
-  
+
   # Test empty string
   expect_error(read_sensitivity_label(""), "must be a single non-empty character string")
-  
+
   # Test multiple values
   expect_error(read_sensitivity_label(c(tmp, tmp)), "must be a single non-empty character string")
-  
+
   # Test non-existent file
   non_existent_file <- tempfile(fileext = ".xlsx")
   expect_error(read_sensitivity_label(non_existent_file), "does not exist")
-  
+
   # Test invalid file extensions
   txt_file <- tempfile(fileext = ".txt")
   file.create(txt_file)
   expect_error(read_sensitivity_label(txt_file), "must be an Excel workbook")
-  
+
   pdf_file <- tempfile(fileext = ".pdf")
   file.create(pdf_file)
   expect_error(read_sensitivity_label(pdf_file), "must be an Excel workbook")
-  
+
   # Test file with no extension
   no_ext_file <- tempfile()
   file.create(no_ext_file)

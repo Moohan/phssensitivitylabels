@@ -18,11 +18,11 @@ read_sensitivity_label <- function(file) {
   if (missing(file)) {
     cli::cli_abort("{.arg file} is missing with no default.")
   }
-  
+
   if (is.null(file)) {
     cli::cli_abort("{.arg file} must not be {.val NULL}.")
   }
-  
+
   if (!is.character(file) || length(file) != 1 || is.na(file) || file == "") {
     cli::cli_abort("{.arg file} must be a single non-empty character string.")
   }
@@ -31,7 +31,7 @@ read_sensitivity_label <- function(file) {
   if (!file.exists(file)) {
     cli::cli_abort("File {.path {file}} does not exist.")
   }
-  
+
   # Check file is Excel workbook
   file_ext <- tolower(tools::file_ext(file))
   if (!file_ext %in% c("xlsx", "xls")) {
@@ -71,23 +71,23 @@ apply_sensitivity_label <- function(file, label) {
   if (missing(file)) {
     cli::cli_abort("{.arg file} is missing with no default.")
   }
-  
+
   if (missing(label)) {
     cli::cli_abort("{.arg label} is missing with no default.")
   }
-  
+
   if (is.null(file)) {
     cli::cli_abort("{.arg file} must not be {.val NULL}.")
   }
-  
+
   if (is.null(label)) {
     cli::cli_abort("{.arg label} must not be {.val NULL}.")
   }
-  
+
   if (!is.character(file) || length(file) != 1 || is.na(file) || file == "") {
     cli::cli_abort("{.arg file} must be a single non-empty character string.")
   }
-  
+
   if (!is.character(label) || length(label) != 1 || is.na(label) || label == "") {
     cli::cli_abort("{.arg label} must be a single non-empty character string.")
   }
@@ -104,7 +104,7 @@ apply_sensitivity_label <- function(file, label) {
   if (!file.exists(file)) {
     cli::cli_abort("File {.path {file}} does not exist.")
   }
-  
+
   # Check file is Excel workbook
   file_ext <- tolower(tools::file_ext(file))
   if (!file_ext %in% c("xlsx", "xls")) {
