@@ -13,8 +13,8 @@ License: MIT + file LICENSE
 URL: https://github.com/Moohan/phssensitivitylabels
 BugReports: https://github.com/Moohan/phssensitivitylabels/issues
 Imports:
-    openxlsx2,
     cli,
+    openxlsx2,
     tools
 Suggests:
     testthat
