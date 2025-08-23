@@ -19,7 +19,7 @@ test_that("apply_sensitivity_label returns file path and applies label", {
   result <- apply_sensitivity_label(tmp, "OFFICIAL_SENSITIVE_VMO")
   expect_equal(result, tmp)
   expect_equal(read_sensitivity_label(tmp), "OFFICIAL_SENSITIVE_VMO")
-  
+
   # Clean up
   unlink(tmp)
 })
@@ -42,7 +42,7 @@ test_that("functions work with .xls and .xlsx extensions", {
   result <- apply_sensitivity_label(tmp_upper, "OFFICIAL")
   expect_equal(result, tmp_upper)
   expect_equal(read_sensitivity_label(tmp_upper), "OFFICIAL")
-  
+
   # Clean up
   unlink(c(tmp_xlsx, tmp_upper))
 })
@@ -53,7 +53,7 @@ test_that("read_sensitivity_label returns 'no label' for file with no label", {
   wb <- openxlsx2::wb_add_worksheet(wb, "Sheet1")
   openxlsx2::wb_save(wb, tmp)
   expect_equal(read_sensitivity_label(tmp), "no label")
-  
+
   # Clean up
   unlink(tmp)
 })
@@ -67,7 +67,7 @@ test_that("apply_sensitivity_label errors for invalid label", {
     apply_sensitivity_label(tmp, "INVALID"),
     "one of"
   )
-  
+
   # Clean up
   unlink(tmp)
 })
@@ -92,7 +92,7 @@ test_that("apply_sensitivity_label returns file path invisibly", {
   # Test that the returned value is correct
   result <- apply_sensitivity_label(tmp, "OFFICIAL")
   expect_equal(result, tmp)
-  
+
   # Clean up
   unlink(tmp)
 })
@@ -117,7 +117,7 @@ test_that("apply_sensitivity_label validates label argument correctly", {
   expect_error(apply_sensitivity_label(tmp, "INVALID"), "one of")
   expect_error(apply_sensitivity_label(tmp, ""), "must be a single non-empty character string")
   expect_error(apply_sensitivity_label(tmp, "Secret"), "one of")
-  
+
   # Clean up
   unlink(tmp)
 })
@@ -151,7 +151,7 @@ test_that("read_sensitivity_label handles files with corrupted or unknown labels
     detected_label <- read_sensitivity_label(tmp)
     expect_equal(detected_label, label)
   }
-  
+
   # Clean up
   unlink(tmp)
 })
@@ -174,7 +174,7 @@ test_that("read_sensitivity_label handles edge cases", {
 
   apply_sensitivity_label(tmp, "OFFICIAL_SENSITIVE_VMO")
   expect_equal(read_sensitivity_label(tmp), "OFFICIAL_SENSITIVE_VMO")
-  
+
   # Clean up
   unlink(tmp)
 })
@@ -204,7 +204,7 @@ test_that("internal XML mappings work correctly through public interface", {
 
   apply_sensitivity_label(tmp, "OFFICIAL_SENSITIVE_VMO")
   expect_equal(read_sensitivity_label(tmp), "OFFICIAL_SENSITIVE_VMO")
-  
+
   # Clean up
   unlink(tmp)
 })
@@ -231,7 +231,7 @@ test_that("comprehensive edge case testing", {
   # Test that files can be relabeled multiple times
   apply_sensitivity_label(tmp, "Personal")
   expect_equal(read_sensitivity_label(tmp), "Personal")
-  
+
   # Clean up
   unlink(tmp)
 })
@@ -252,7 +252,7 @@ test_that("function parameter validation", {
   # Test numeric parameter
   expect_error(apply_sensitivity_label(tmp, 1), "must be a single non-empty character string")
   expect_error(apply_sensitivity_label(tmp, c("Personal", "OFFICIAL")), "must be a single non-empty character string")
-  
+
   # Clean up
   unlink(tmp)
 })
@@ -297,7 +297,7 @@ test_that("comprehensive parameter validation for apply_sensitivity_label", {
   no_ext_file <- tempfile()
   file.create(no_ext_file)
   expect_error(apply_sensitivity_label(no_ext_file, "Personal"), "must be an Excel workbook")
-  
+
   # Clean up
   unlink(c(tmp, txt_file, pdf_file, no_ext_file))
 })
@@ -345,7 +345,7 @@ test_that("comprehensive parameter validation for read_sensitivity_label", {
   no_ext_file <- tempfile()
   file.create(no_ext_file)
   expect_error(read_sensitivity_label(no_ext_file), "must be an Excel workbook")
-  
+
   # Clean up
   unlink(c(tmp, txt_file, pdf_file, no_ext_file))
 })
