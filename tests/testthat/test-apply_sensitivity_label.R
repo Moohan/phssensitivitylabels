@@ -40,7 +40,7 @@ test_that("functions work with .xls and .xlsx extensions", {
   wb_upper <- openxlsx2::wb_workbook()
   wb_upper <- openxlsx2::wb_add_worksheet(wb_upper, "Sheet1")
   openxlsx2::wb_save(wb_upper, tmp_upper)
-  
+
   # Verify the file exists and has the right extension
   expect_true(file.exists(tmp_upper))
   expect_equal(toupper(tools::file_ext(tmp_upper)), "XLSX")
