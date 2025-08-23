@@ -71,7 +71,7 @@ test_that("apply_sensitivity_label errors for invalid label", {
   openxlsx2::wb_save(wb, tmp)
   expect_error(
     apply_sensitivity_label(tmp, "INVALID"),
-    "must be one of"
+    "`label` must be one of"
   )
 
   # Clean up
@@ -115,14 +115,14 @@ test_that("apply_sensitivity_label validates label argument correctly", {
   expect_equal(read_sensitivity_label(tmp), "Personal")
 
   # Test case sensitivity - should error for wrong case
-  expect_error(apply_sensitivity_label(tmp, "personal"), "must be one of")
-  expect_error(apply_sensitivity_label(tmp, "official"), "must be one of")
-  expect_error(apply_sensitivity_label(tmp, "PERSONAL"), "must be one of")
+  expect_error(apply_sensitivity_label(tmp, "personal"), "`label` must be one of")
+  expect_error(apply_sensitivity_label(tmp, "official"), "`label` must be one of")
+  expect_error(apply_sensitivity_label(tmp, "PERSONAL"), "`label` must be one of")
 
   # Test invalid labels
-  expect_error(apply_sensitivity_label(tmp, "INVALID"), "must be one of")
-  expect_error(apply_sensitivity_label(tmp, ""), "label must be a single non-empty character string")
-  expect_error(apply_sensitivity_label(tmp, "Secret"), "must be one of")
+  expect_error(apply_sensitivity_label(tmp, "INVALID"), "`label` must be one of")
+  expect_error(apply_sensitivity_label(tmp, ""), "`label` must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(tmp, "Secret"), "`label` must be one of")
 
   # Clean up
   unlink(tmp)
@@ -249,15 +249,15 @@ test_that("function parameter validation", {
   openxlsx2::wb_save(wb, tmp)
 
   # Test NULL parameter behavior
-  expect_error(apply_sensitivity_label(tmp, NULL), "must not be NULL")
-  expect_error(apply_sensitivity_label(NULL, "Personal"), "must not be NULL")
+  expect_error(apply_sensitivity_label(tmp, NULL), "`label` must not be")
+  expect_error(apply_sensitivity_label(NULL, "Personal"), "`file` must not be")
 
   # Test empty string
-  expect_error(apply_sensitivity_label(tmp, ""), "label must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(tmp, ""), "`label` must be a single non-empty character string")
 
   # Test numeric parameter
-  expect_error(apply_sensitivity_label(tmp, 1), "label must be a single non-empty character string")
-  expect_error(apply_sensitivity_label(tmp, c("Personal", "OFFICIAL")), "label must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(tmp, 1), "`label` must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(tmp, c("Personal", "OFFICIAL")), "`label` must be a single non-empty character string")
 
   # Clean up
   unlink(tmp)
@@ -270,39 +270,39 @@ test_that("comprehensive parameter validation for apply_sensitivity_label", {
   openxlsx2::wb_save(wb, tmp)
 
   # Test missing arguments
-  expect_error(apply_sensitivity_label(), "is missing")
-  expect_error(apply_sensitivity_label(tmp), "is missing")
+  expect_error(apply_sensitivity_label(), "`file` is missing")
+  expect_error(apply_sensitivity_label(tmp), "`label` is missing")
 
   # Test NA values
-  expect_error(apply_sensitivity_label(NA_character_, "Personal"), "file must be a single non-empty character string")
-  expect_error(apply_sensitivity_label(tmp, NA_character_), "label must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(NA_character_, "Personal"), "`file` must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(tmp, NA_character_), "`label` must be a single non-empty character string")
 
   # Test various invalid types for file
-  expect_error(apply_sensitivity_label(123, "Personal"), "file must be a single non-empty character string")
-  expect_error(apply_sensitivity_label(TRUE, "Personal"), "file must be a single non-empty character string")
-  expect_error(apply_sensitivity_label(list("file.xlsx"), "Personal"), "file must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(123, "Personal"), "`file` must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(TRUE, "Personal"), "`file` must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(list("file.xlsx"), "Personal"), "`file` must be a single non-empty character string")
 
   # Test various invalid types for label
-  expect_error(apply_sensitivity_label(tmp, 123), "label must be a single non-empty character string")
-  expect_error(apply_sensitivity_label(tmp, TRUE), "label must be a single non-empty character string")
-  expect_error(apply_sensitivity_label(tmp, list("Personal")), "label must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(tmp, 123), "`label` must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(tmp, TRUE), "`label` must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(tmp, list("Personal")), "`label` must be a single non-empty character string")
 
   # Test multiple values
-  expect_error(apply_sensitivity_label(c(tmp, tmp), "Personal"), "file must be a single non-empty character string")
+  expect_error(apply_sensitivity_label(c(tmp, tmp), "Personal"), "`file` must be a single non-empty character string")
 
   # Test invalid file extensions
   txt_file <- tempfile(fileext = ".txt")
   file.create(txt_file)
-  expect_error(apply_sensitivity_label(txt_file, "Personal"), "must be an Excel workbook")
+  expect_error(apply_sensitivity_label(txt_file, "Personal"), "`file` must be an Excel workbook")
 
   pdf_file <- tempfile(fileext = ".pdf")
   file.create(pdf_file)
-  expect_error(apply_sensitivity_label(pdf_file, "Personal"), "must be an Excel workbook")
+  expect_error(apply_sensitivity_label(pdf_file, "Personal"), "`file` must be an Excel workbook")
 
   # Test file with no extension
   no_ext_file <- tempfile()
   file.create(no_ext_file)
-  expect_error(apply_sensitivity_label(no_ext_file, "Personal"), "must be an Excel workbook")
+  expect_error(apply_sensitivity_label(no_ext_file, "Personal"), "`file` must be an Excel workbook")
 
   # Clean up
   unlink(c(tmp, txt_file, pdf_file, no_ext_file))
@@ -315,24 +315,24 @@ test_that("comprehensive parameter validation for read_sensitivity_label", {
   openxlsx2::wb_save(wb, tmp)
 
   # Test missing arguments
-  expect_error(read_sensitivity_label(), "is missing")
+  expect_error(read_sensitivity_label(), "`file` is missing")
 
   # Test NULL
-  expect_error(read_sensitivity_label(NULL), "must not be NULL")
+  expect_error(read_sensitivity_label(NULL), "`file` must not be")
 
   # Test NA values
-  expect_error(read_sensitivity_label(NA_character_), "file must be a single non-empty character string")
+  expect_error(read_sensitivity_label(NA_character_), "`file` must be a single non-empty character string")
 
   # Test various invalid types
-  expect_error(read_sensitivity_label(123), "file must be a single non-empty character string")
-  expect_error(read_sensitivity_label(TRUE), "file must be a single non-empty character string")
-  expect_error(read_sensitivity_label(list("file.xlsx")), "file must be a single non-empty character string")
+  expect_error(read_sensitivity_label(123), "`file` must be a single non-empty character string")
+  expect_error(read_sensitivity_label(TRUE), "`file` must be a single non-empty character string")
+  expect_error(read_sensitivity_label(list("file.xlsx")), "`file` must be a single non-empty character string")
 
   # Test empty string
-  expect_error(read_sensitivity_label(""), "file must be a single non-empty character string")
+  expect_error(read_sensitivity_label(""), "`file` must be a single non-empty character string")
 
   # Test multiple values
-  expect_error(read_sensitivity_label(c(tmp, tmp)), "file must be a single non-empty character string")
+  expect_error(read_sensitivity_label(c(tmp, tmp)), "`file` must be a single non-empty character string")
 
   # Test non-existent file
   non_existent_file <- tempfile(fileext = ".xlsx")
@@ -341,16 +341,16 @@ test_that("comprehensive parameter validation for read_sensitivity_label", {
   # Test invalid file extensions
   txt_file <- tempfile(fileext = ".txt")
   file.create(txt_file)
-  expect_error(read_sensitivity_label(txt_file), "must be an Excel workbook")
+  expect_error(read_sensitivity_label(txt_file), "`file` must be an Excel workbook")
 
   pdf_file <- tempfile(fileext = ".pdf")
   file.create(pdf_file)
-  expect_error(read_sensitivity_label(pdf_file), "must be an Excel workbook")
+  expect_error(read_sensitivity_label(pdf_file), "`file` must be an Excel workbook")
 
   # Test file with no extension
   no_ext_file <- tempfile()
   file.create(no_ext_file)
-  expect_error(read_sensitivity_label(no_ext_file), "must be an Excel workbook")
+  expect_error(read_sensitivity_label(no_ext_file), "`file` must be an Excel workbook")
 
   # Clean up
   unlink(c(tmp, txt_file, pdf_file, no_ext_file))
