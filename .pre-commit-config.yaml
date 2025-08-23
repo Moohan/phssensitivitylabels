@@ -1,0 +1,24 @@
+# Pre-commit hooks to match CI: Style, Document, and Test
+repos:
+  - repo: local
+    hooks:
+      - id: style-r
+        name: Style R code with styler
+        entry: ./.pre-commit-style.R
+        language: system
+        files: '\.R$'
+        pass_filenames: false
+        
+      - id: document-r
+        name: Document R package with devtools
+        entry: ./.pre-commit-document.R
+        language: system
+        files: '\.R$'
+        pass_filenames: false
+        
+      - id: test-r
+        name: Test R package with devtools
+        entry: ./.pre-commit-test.R
+        language: system
+        files: '\.(R|r)$'
+        pass_filenames: false

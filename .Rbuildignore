@@ -2,3 +2,7 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^\.github$
+^\.pre-commit-config\.yaml$
+^\.pre-commit.*\.R$
+^setup-precommit\.R$
+^PRECOMMIT\.md$
