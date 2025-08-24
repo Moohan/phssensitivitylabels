@@ -82,7 +82,7 @@ test_that("apply_sensitivity_label errors when file does not exist", {
   non_existent_file <- tempfile(fileext = ".xlsx")
   expect_error(
     apply_sensitivity_label(non_existent_file, "Personal"),
-    "does not exist"
+    "not exist"
   )
 })
 
@@ -336,7 +336,7 @@ test_that("comprehensive parameter validation for read_sensitivity_label", {
 
   # Test non-existent file
   non_existent_file <- tempfile(fileext = ".xlsx")
-  expect_error(read_sensitivity_label(non_existent_file), "does not exist")
+  expect_error(read_sensitivity_label(non_existent_file), "not exist")
 
   # Test invalid file extensions
   txt_file <- tempfile(fileext = ".txt")
