@@ -188,7 +188,7 @@ apply_sensitivity_label <- function(file, label) {
       head = "",
       body = xml_add_child(
         xml_node = paste0(zipdir, "/_rels/.rels"),
-        xml_child = '<Relationship Id="rId6" Type="http://schemas.microsoft.com/office/2020/02/relationships/classificationlabels" Target="docProps/custom.xml" />'
+        xml_child = '<Relationship Id="rId6" Type="http://schemas.microsoft.com/office/2020/02/relationships/classificationlabels" Target="docMetadata/LabelInfo.xml" />'
       ),
       tail = "",
       fl = paste0(zipdir, "/_rels/.rels")
