@@ -161,7 +161,7 @@ apply_sensitivity_label <- function(file, label) {
     dir.create(zipdir)
 
     # Unzip the file into the dir
-    unzip(x, exdir= zipdir)
+    unzip(file, exdir= zipdir)
 
     xml_map <- .get_sensitivity_xml_map()
     xml <- xml_map[[label]]
@@ -195,7 +195,7 @@ apply_sensitivity_label <- function(file, label) {
     )
 
     # Delete original file
-    file.remove(x)
+    file.remove(file)
 
     newzip <- paste0(file_path, "/", file_name, ".zip")
     file.create(newzip)
