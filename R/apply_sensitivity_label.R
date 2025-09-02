@@ -73,7 +73,7 @@ read_sensitivity_label <- function(file) {
 #'
 #' The function loads the Excel file, applies the specified sensitivity label using the appropriate XML, and saves the modified file. If successful, it silently returns the file path.
 #'
-#' @param file Path to the Excel or Word file (.xlsx or .docx)
+#' @param file Path to the Excel or Word file (`.xlsx` or `.docx`)
 #' @param label Sensitivity label. One of: 'Personal', 'OFFICIAL', 'OFFICIAL_SENSITIVE_VMO'.
 #' @return Silently returns the file path if successful.
 #' @export
