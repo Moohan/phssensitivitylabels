@@ -167,7 +167,7 @@ apply_sensitivity_label <- function(file, label) {
     xml <- xml_map[[label]]
 
     # Create the dir using that name
-    dir.create(paste0(zipdir, "/docMetadata"))
+    dir.create(paste0(zipdir, "/docMetadata"), showWarnings = FALSE, recursive = TRUE)
 
     # Write the XML data to the temp directory
     write_xml(xml, paste0(zipdir, "/docMetadata/LabelInfo.xml"), useBytes = TRUE)
