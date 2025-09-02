@@ -10,7 +10,7 @@
 #' Read Sensitivity Label
 #' @description Reads the sensitivity label from an Excel or Word doc file. Returns the label name, 'no label' if none is found, or errors if unexpected.
 #'
-#' @param file Path to the Excel or Word file (.xlsx, .xls or .docx)
+#' @param file Path to the Excel or Word file (`.xlsx` or `.docx`)
 #' @return The sensitivity label name, or 'no label' if none is found.
 #' @export
 read_sensitivity_label <- function(file) {
