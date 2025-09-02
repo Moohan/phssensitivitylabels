@@ -212,7 +212,7 @@ apply_sensitivity_label <- function(file, label) {
     ) # End of suppressWarnings
 
     # Delete un-zipped files
-    file.remove(zipdir)
+    unlink(zipdir, recursive = TRUE)
 
     # Re-naming file
     file.rename(from = newzip,
